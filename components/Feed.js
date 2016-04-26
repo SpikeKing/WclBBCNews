@@ -92,7 +92,7 @@ class Feed extends Component {
       <ListView
         testID={"Feed Screen"}
         dataSource={this.state.dataSource}
-        renderRow={this._renderStories}
+        renderRow={this._renderStories.bind(this)}
         style={styles.listView}
         contentInset={{top:0, left:0, bottom: 64, right: 0}}
 
