@@ -12,7 +12,6 @@
     "htmlparser": "^1.7.7",
     "moment": "^2.11.1",
 
-    "react-native-angular-activity-indicator": "^0.0.3",
     "react-native-linear-gradient": "^1.4.0",
     "react-native-video": "^0.6.1"
   }

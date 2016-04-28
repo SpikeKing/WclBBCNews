@@ -10,18 +10,32 @@ import React, {
   View,
   Text,
   TimerMixin,
-  RefreshControl
+  RefreshControl,
+  ActivityIndicatorIOS
 } from 'react-native';
 
-import Loader from 'react-native-angular-activity-indicator';
 import Story from './Story.js';
+
+var isMounted = (component) => {
+  try {
+    React.findDOMNode(component);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
 
 class Feed extends Component {
   constructor(props) {
     super(props);
+
+    this._fetchData = this._fetchData.bind(this);
+
     var dataSource = new ListView.DataSource({
       rowHasChanged: (row1, row2) => row1 !== row2
     });
+
     this.state = {
       dataSource: dataSource,
       loaded: false,
@@ -31,17 +45,22 @@ class Feed extends Component {
   }
 
   componentDidMount() {
-    this._fetchData()
+    this.loadInterval = true;
+    this._fetchData();
   }
 
+  componentWillUnmount () {
+    this.loadInterval = false;
+}
+
   _fetchData() {
-    this.state.isRefreshing = true;
+    this.setState.isRefreshing = true;
 
     fetch(`http://trevor-producer-cdn.api.bbci.co.uk/content${this.props.collection || '/cps/news/world'}`)
       .then((response) => response.json())
       .then((responseData) => this._filterNews(responseData.relations))
       .then((newItems) => {
-        this.setState({
+        this.loadInterval && this.setState({
           dataSource: this.state.dataSource.cloneWithRows(newItems),
           loaded: true,
           isRefreshing: false,
@@ -61,12 +80,11 @@ class Feed extends Component {
 
   _renderLoading() {
     return (
-      <View style={styles.loadingContainer}>
-        <Loader
-          isAnimating={this.state.isAnimating}
-          lineWidth={10}
-          color={'#FF00FF'}
-          style={styles.loadingView}/>
+      <View style={{flexDirection: 'row', justifyContent: 'center', flex: 1}}>
+        <ActivityIndicatorIOS
+          animating={this.state.isAnimating}
+          style={[styles.centering, {height: 80}]}
+          size="large"/>
       </View>
     );
   }

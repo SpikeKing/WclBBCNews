@@ -10,7 +10,7 @@ import React, {
   View
 } from 'react-native';
 
-class Story extends Component {
+class StoryDetail extends Component {
   render() {
     return (
       <View>
@@ -22,4 +22,4 @@ class Story extends Component {
   }
 }
 
-export default Story;
+export default StoryDetail;
