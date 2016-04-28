@@ -1,5 +1,5 @@
 /**
- * Created by wangchenlong on 16/4/26.
+ * Created by wangchenlong on 16/4/28.
  */
 'use strict';
 
@@ -10,25 +10,8 @@ import React, {
   View
 } from 'react-native';
 
-import moment from 'moment';
-
-import Feed from './Feed.js';
-import StoryDetail from 'StoryDetail.js';
-
 class Story extends Component {
-
-  static propTypes = {
-    name: React.PropTypes.string
-  };
-
-  constructor(props) {
-    super(props);
-  }
-
   render() {
-
-    var story = this.props.story;
-
     return (
       <View>
         <Text style={{flex:1}}>

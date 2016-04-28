@@ -66,24 +66,24 @@ class Feed extends Component {
           isAnimating={this.state.isAnimating}
           lineWidth={10}
           color={'#FF00FF'}
-          style={styles.loadingView}
-          />
+          style={styles.loadingView}/>
       </View>
     );
   }
 
+  /**
+   * 渲染每个列表项
+   * @param story 列表项的内容
+   * @returns {XML} 布局
+   * @private
+   */
   _renderStories(story) {
     return (
-      <View>
-        <Text style={{flex:1}}>
-          HelloWorld!
-        </Text>
-      </View>
+      <Story story={story} navigator={this.props.navigator}/>
     );
   }
 
   render() {
-
     if (!this.state.loaded) {
       return this._renderLoading();
     }
