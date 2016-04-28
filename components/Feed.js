@@ -1,5 +1,6 @@
 /**
  * Created by wangchenlong on 16/4/25.
+ * @flow
  */
 'use strict';
 
@@ -8,29 +9,20 @@ import React, {
   StyleSheet,
   ListView,
   View,
-  Text,
-  TimerMixin,
   RefreshControl,
   ActivityIndicatorIOS
 } from 'react-native';
 
 import Story from './Story.js';
 
-var isMounted = (component) => {
-  try {
-    React.findDOMNode(component);
-    return true;
-  } catch (e) {
-    return false;
-  }
-};
-
-
 class Feed extends Component {
+
+  /**
+   * 构造器, 初始化加载状态和列表数据
+   * @param props 属性
+   */
   constructor(props) {
     super(props);
-
-    this._fetchData = this._fetchData.bind(this);
 
     var dataSource = new ListView.DataSource({
       rowHasChanged: (row1, row2) => row1 !== row2
@@ -44,15 +36,25 @@ class Feed extends Component {
     };
   }
 
+  /**
+   * 已经挂载当前页面
+   */
   componentDidMount() {
-    this.loadInterval = true;
+    this.loadInterval = true; // 加载异常的处理方法
     this._fetchData();
   }
 
-  componentWillUnmount () {
+  /**
+   * 将会卸载当前页面
+   */
+  componentWillUnmount() {
     this.loadInterval = false;
-}
+  }
 
+  /**
+   * 抓取数据, 抓取时调用加载页面, 结束后关闭加载
+   * @private
+   */
   _fetchData() {
     this.setState.isRefreshing = true;
 
@@ -69,6 +71,12 @@ class Feed extends Component {
       }).done();
   }
 
+  /**
+   * 过滤新闻的内容, 只使用文本.
+   * @param news
+   * @returns {Promise}
+   * @private
+   */
   _filterNews(news = []) {
     return new Promise((res, rej) => {
       const filtered = news.filter(item => {
@@ -78,12 +86,17 @@ class Feed extends Component {
     })
   }
 
+  /**
+   * 渲染加载页面
+   * @returns {XML} ActivityIndicatorIOS加载
+   * @private
+   */
   _renderLoading() {
     return (
       <View style={{flexDirection: 'row', justifyContent: 'center', flex: 1}}>
         <ActivityIndicatorIOS
           animating={this.state.isAnimating}
-          style={[styles.centering, {height: 80}]}
+          style={{height: 80}}
           size="large"/>
       </View>
     );
@@ -102,6 +115,7 @@ class Feed extends Component {
   }
 
   render() {
+    // 未加载完成时, 调用加载页面
     if (!this.state.loaded) {
       return this._renderLoading();
     }
@@ -111,9 +125,8 @@ class Feed extends Component {
         testID={"Feed Screen"}
         dataSource={this.state.dataSource}
         renderRow={this._renderStories.bind(this)}
-        style={styles.listView}
+        style={{backgroundColor: '#eee'}}
         contentInset={{top:0, left:0, bottom: 64, right: 0}}
-
         scrollEventThrottle={200}
         {...this.props}
         refreshControl={
@@ -123,29 +136,10 @@ class Feed extends Component {
             tintColor='#BB1919'
             title="Loading..."
             progressBackgroundColor="#FFFF00"
-          ></RefreshControl>
-        }
+          />}
         ></ListView>
     );
   }
 }
-
-var styles = StyleSheet.create({
-  loadingContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    flex: 1
-  },
-
-  loadingView: {
-    marginTop: 30,
-    marginRight: 50,
-    backgroundColor: '#FF00FF'
-  },
-
-  listView: {
-    backgroundColor: '#eee'
-  }
-});
 
 export default Feed;

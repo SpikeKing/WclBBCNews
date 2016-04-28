@@ -1,5 +1,6 @@
 /**
  * Created by wangchenlong on 16/4/26.
+ * @flow
  */
 'use strict';
 
@@ -12,17 +13,24 @@ import React, {
   View
 } from 'react-native';
 
-import moment from 'moment';
+import moment from 'moment'; // 处理时间
 
-import Feed from './Feed.js';
-import StoryDetail from './StoryDetail.js';
+import Feed from './Feed.js'; // 新闻列表
+import StoryDetail from './StoryDetail.js'; // 详细内容
 
+/**
+ * 新闻项的模块
+ */
 class Story extends Component {
 
   static propTypes = {
-    name: React.PropTypes.string
+    name: React.PropTypes.string // 标题名称
   };
 
+  /**
+   * 构造函数
+   * @param props 属性
+   */
   constructor(props) {
     super(props);
   }
@@ -54,22 +62,26 @@ class Story extends Component {
   }
 
   /**
-   * 根据类型提取BBC的新闻
+   * 根据类型, 提取不同的新闻组
    * @param story 内容
    * @private
    */
   _getCollectionForStory(story) {
     console.log('STORY', story);
     if (story.content.relations && story.content.relations.length) {
-      return story.content.relations.find(
-          item => {
-            return item.primaryType === 'bbc.mobile.news.collection';
-        });
+      return story.content.relations.find(item => {
+        return item.primaryType === 'bbc.mobile.news.collection';
+      });
     } else {
       throw  "No collection found";
     }
   }
 
+  /**
+   * 点击新闻组, 重新加载页面
+   * @param collection 新闻组
+   * @private
+   */
   _pressedCollection(collection) {
     this.props.navigator.push({
       component: Feed,
@@ -81,12 +93,10 @@ class Story extends Component {
     });
   }
 
-
   render() {
-
-    var story = this.props.story;
-    var time = moment.unix(story.content.lastUpdated / 1000).fromNow();
-    var collection = this._getCollectionForStory(story) || {};
+    var story = this.props.story; // 新闻项
+    var time = moment.unix(story.content.lastUpdated / 1000).fromNow(); // 时间处理
+    var collection = this._getCollectionForStory(story) || {}; // 新闻组的标题
 
     return (
       <TouchableHighlight
