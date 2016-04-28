@@ -120,15 +120,18 @@ class Feed extends Component {
       return this._renderLoading();
     }
 
+    /**
+     * 关于{...this.props}, 父组件把所有props均传递给自组件. Thx@左大师
+     */
     return (
       <ListView
+        {...this.props}
         testID={"Feed Screen"}
         dataSource={this.state.dataSource}
         renderRow={this._renderStories.bind(this)}
         style={{backgroundColor: '#eee'}}
         contentInset={{top:0, left:0, bottom: 64, right: 0}}
         scrollEventThrottle={200}
-        {...this.props}
         refreshControl={
           <RefreshControl
             refreshing={this.state.isRefreshing}
@@ -137,7 +140,7 @@ class Feed extends Component {
             title="Loading..."
             progressBackgroundColor="#FFFF00"
           />}
-        ></ListView>
+        />
     );
   }
 }
