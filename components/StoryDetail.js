@@ -1,5 +1,6 @@
 /**
  * Created by wangchenlong on 16/4/28.
+ * @flow
  */
 'use strict';
 
@@ -7,13 +8,17 @@ import React, {
   Component,
   StyleSheet,
   Text,
-  View
+  View,
+  Image,
+  TouchableHighlight,
+  ScrollView,
+  LinkingIOS
 } from 'react-native';
 
 var moment = require('moment');
-var Link = require('./Link.js');
+var Link = require('./Link');
 var htmlparser = require('htmlparser');
-var XMLToReactMap = require('./XMLToReactMap.js');
+var XMLToReactMap = require('../XMLToReactMap.js');
 
 class StoryDetail extends Component {
 
@@ -27,9 +32,49 @@ class StoryDetail extends Component {
     }
   }
 
+  _parseXMLBody(body, cb) {
+    var handler = new Tautologistics.NodeHtmlParser.DefaultHandler(
+      function (error, dom) {
+        cb(dom)
+      }, {enforceEmptyTags: false, ignoreWhitespace: true});
+
+    var parser = new Tautologistics.NodeHtmlParser.Parser(handler);
+    parser.parseComplete(body);
+  }
+
+  _fetchStoryData(cb) {
+    fetch(`http://trevor-producer-cdn.api.bbci.co.uk/content${this.props.story.content.id}`)
+      .then((response) => response.json())
+      .then((responseData) => {
+        const images = responseData.relations.filter(item => {
+          return item.primaryType === 'bbc.mobile.news.image';
+        });
+        const videos = responseData.relations.filter(item => {
+          return item.primaryType === 'bbc.mobile.news.video';
+        });
+        const relations = {images, videos};
+        this._parseXMLBody(responseData.body, (result) => {
+          cb(result, relations);
+        });
+      }).done();
+  }
+
   componentDidMount() {
-    this.fetchStoryData((result, media) => {
-      
+    this._fetchStoryData((result, media) => {
+      const rootElement = result.find(item => {
+        return item.name === 'body';
+      });
+
+      XMLToReactMap.createReactElementsWithXMLRoot(rootElement, media)
+        .then(array => {
+          var scroll = React.createElement(ScrollView, {
+            contentInset: {top: 0, left: 0, bottom: 64, right: 0},
+            style: {flex: 1, flexDirection: 'column', backgroundColor: 'white'},
+            accessibilityLabel: "Story Detail"
+          }, array);
+
+          this.setState({loading: false, elements: scroll});
+        });
     });
   }
 

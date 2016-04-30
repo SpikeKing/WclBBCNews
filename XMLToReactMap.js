@@ -11,8 +11,8 @@ var {
 
 
 var Video = require('react-native-video');
-var Link = require('./Components/Link');
-var VideoPlaceHolder = require('./Components/VideoPlaceHolder');
+var Link = require('./components/Link.js');
+var VideoPlaceHolder = require('./components/VideoPlaceHolder.js');
 
 module.exports = {
 

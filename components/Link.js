@@ -10,24 +10,30 @@ import React, {
   LinkingIOS
 } from 'react-native';
 
+var StoryDetail = require('./StoryDetail.js');
+var moment = require('moment');
+
+// 错误未知! 待查
 class Story extends Component {
   static propTypes = {
-    name: React.PropTypes.string
+    name: React.PropTypes.string,
   };
 
   constructor(props) {
     super(props);
   }
 
-  _pressURL() {
-    console.log('hi', this.props.url);
-    LinkingIOS.openURL(this.props.url);
+  pressedURL() {
+    console.log('hi', this.props.url)
+
+    LinkingIOS.openURL(this.props.url)
   }
 
   render() {
+
     return (
       <Text style={styles.hyperlink}
-            onPress={this._pressURL.bind(this)}>
+            onPress={this.pressedURL.bind(this)}>
         {this.props.children}
       </Text>
     );
@@ -42,4 +48,4 @@ var styles = StyleSheet.create({
   }
 });
 
-export default Story;
+module.exports = Story;

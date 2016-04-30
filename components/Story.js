@@ -14,7 +14,6 @@ import React, {
 } from 'react-native';
 
 import moment from 'moment'; // 处理时间
-
 import Feed from './Feed.js'; // 新闻列表
 import StoryDetail from './StoryDetail.js'; // 详细内容
 
