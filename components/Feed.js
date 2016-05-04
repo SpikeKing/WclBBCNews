@@ -34,21 +34,15 @@ class Feed extends Component {
       isAnimating: true,
       isRefreshing: false
     };
+
+    this._fetchData = this._fetchData.bind(this);
   }
 
   /**
    * 已经挂载当前页面
    */
   componentDidMount() {
-    this.loadInterval = true; // 加载异常的处理方法
     this._fetchData();
-  }
-
-  /**
-   * 将会卸载当前页面
-   */
-  componentWillUnmount() {
-    this.loadInterval = false;
   }
 
   /**
@@ -56,13 +50,13 @@ class Feed extends Component {
    * @private
    */
   _fetchData() {
-    this.setState.isRefreshing = true;
-
+    this.setState({isRefreshing: true});
+    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     fetch(`http://trevor-producer-cdn.api.bbci.co.uk/content${this.props.collection || '/cps/news/world'}`)
       .then((response) => response.json())
       .then((responseData) => this._filterNews(responseData.relations))
       .then((newItems) => {
-        this.loadInterval && this.setState({
+        this.setState({
           dataSource: this.state.dataSource.cloneWithRows(newItems),
           loaded: true,
           isRefreshing: false,
@@ -83,7 +77,7 @@ class Feed extends Component {
         return item.content.format === 'bbc.mobile.news.format.textual'
       });
       res(filtered);
-    })
+    });
   }
 
   /**
@@ -122,20 +116,21 @@ class Feed extends Component {
 
     /**
      * 关于{...this.props}, 父组件把所有props均传递给自组件. Thx@左大师
+     * 参考: https://facebook.github.io/react-native/docs/refreshcontrol.html
      */
     return (
       <ListView
-        {...this.props}
         testID={"Feed Screen"}
         dataSource={this.state.dataSource}
         renderRow={this._renderStories.bind(this)}
         style={{backgroundColor: '#eee'}}
         contentInset={{top:0, left:0, bottom: 64, right: 0}}
         scrollEventThrottle={200}
+        {...this.props}
         refreshControl={
           <RefreshControl
             refreshing={this.state.isRefreshing}
-            onRefresh={this._fetchData()}
+            onRefresh={this._fetchData.bind(this)}
             tintColor='#BB1919'
             title="Loading..."
             progressBackgroundColor="#FFFF00"

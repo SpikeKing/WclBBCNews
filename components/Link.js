@@ -7,7 +7,7 @@ import React, {
   StyleSheet,
   Text,
   Component,
-  LinkingIOS
+  Linking // LinkingIOS被遗弃, 使用Linking代替
 } from 'react-native';
 
 var StoryDetail = require('./StoryDetail.js');
@@ -26,7 +26,7 @@ class Story extends Component {
   pressedURL() {
     console.log('hi', this.props.url)
 
-    LinkingIOS.openURL(this.props.url)
+    Linking.openURL(this.props.url)
   }
 
   render() {
