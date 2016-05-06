@@ -51,7 +51,6 @@ class Feed extends Component {
    */
   _fetchData() {
     this.setState({isRefreshing: true});
-    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     fetch(`http://trevor-producer-cdn.api.bbci.co.uk/content${this.props.collection || '/cps/news/world'}`)
       .then((response) => response.json())
       .then((responseData) => this._filterNews(responseData.relations))
