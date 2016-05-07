@@ -13,8 +13,7 @@ import React, {
 var StoryDetail = require('./StoryDetail.js');
 var moment = require('moment');
 
-// 错误未知! 待查
-class Story extends Component {
+class Link extends Component {
   static propTypes = {
     name: React.PropTypes.string,
   };
@@ -26,6 +25,7 @@ class Story extends Component {
   pressedURL() {
     console.log('hi', this.props.url)
 
+    // 跳转链接
     Linking.openURL(this.props.url)
   }
 
@@ -48,4 +48,4 @@ var styles = StyleSheet.create({
   }
 });
 
-module.exports = Story;
+module.exports = Link;
